@@ -9,5 +9,6 @@ CREATE TABLE employees (
   name VARCHAR(30) NOT NULL,
   position VARCHAR(30) NOT NULL DEFAULT '',
   department VARCHAR(30) NOT NULL,
-  salary INT NOT NULL
-)
+  salary INT NOT NULL,
+  manager VARCHAR(30) NOT NULL
+);

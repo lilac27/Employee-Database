@@ -96,11 +96,12 @@ function addEmployee () {
         },
     ])
     .then((answers) => {
-        const { name } = answers;
+        const { name, position, department, salary, manager } = answers;
+        const employee = { name, position, department, salary, manager };
         //insert new employee into database
         connection.query(
             'INSERT INTO employees SET ?',
-            { name },
+            employee,
             (err, result) => {
                 if (err) throw err;
                 console.log('Employee added successfully.');
