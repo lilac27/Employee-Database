@@ -23,7 +23,7 @@ function startApp () {
             type: 'list',
             name: 'action',
             message: 'What would you like to do?',
-            choices: ['View all employees', 'Add employee', 'View Departments', 'Add a Department', 'View Roles', 'Add a Role', 'Update employee', 'Exit'],
+            choices: ['View all employees', 'Add employee', 'View Departments', 'Add a Department', 'View Roles', 'Add a Role', 'Update Employee', 'Exit'],
         },
     ])
     .then((answers) => {
@@ -54,6 +54,9 @@ function startApp () {
                 connection.end();
                 console.log('Disconnected from database.');
                 break;
+            default:
+                startApp();
+                break;
         }
     });
 }
@@ -82,7 +85,7 @@ function addEmployee () {
         {
             type: 'input',
             name: 'department',
-            message: 'Enter the department of the employee:',
+            message: 'Enter the department id of the employee:',
         },
         {
             type: 'input',
@@ -100,14 +103,14 @@ function addEmployee () {
         const employee = { name, position, department, salary, manager };
         //insert new employee into database
         connection.query(
-            'INSERT INTO employees SET ?',
-            employee,
+            'INSERT INTO employees (name, position, department_id, salary, manager) VALUES (?, ?, ?, ?, ?)',
+            [name, position, department, salary, manager],
             (err, result) => {
                 if (err) throw err;
                 console.log('Employee added successfully.');
-                startApp(); //go back to main menu
-            }
-        );
+       
+        startApp();
+    });
     });
 }
 
@@ -152,17 +155,17 @@ function addRole() {
     .prompt([
         {
             type: 'input',
-            name: 'name',
+            name: 'title',
             message: 'Enter the role title:',
         },
         {
             type: 'input',
-            name: 'name',
+            name: 'salary',
             message: 'Enter the role salary:',
         },
         {
             type: 'input',
-            name: 'name',
+            name: 'department',
             message: 'Enter the department ID for the role:',
         },
     ])
@@ -179,29 +182,32 @@ function addRole() {
 
 function updateEmployee() {
     inquirer
-    .prompt([
+      .prompt([
         {
-            type:'input',
-            name: 'employeeId',
-            message:'Enter the ID of the employee to update:',
+          type: 'input',
+          name: 'employeeId',
+          message: 'Enter the ID of the employee to update:',
         },
         {
-            type: 'input',
-            name: 'newTitle',
-            message: 'Enter the new title for the employee:',
+          type: 'input',
+          name: 'newTitle',
+          message: 'Enter the new title for the employee:',
         },
-    ])
-    .then((answers) => {
+      ])
+      .then((answers) => {
         const { employeeId, newTitle } = answers;
         connection.query(
-            'UPDATE employees SET title = ? WHERE id = ?',
-            [newTitle, employeeId],
-            (err, result) => {
-                if (err) throw err;
-                console.log('Employee updated successfully.');
-                startApp();
-            }
+          'UPDATE employees SET position = ? WHERE id = ?',
+          [newTitle, employeeId],
+          (err, result) => {
+            if (err) throw err;
+            console.log('Employee updated successfully.');
+            startApp(); // Move this line here
+          }
         );
-    });
-}
+      });
+  }
+  
+
+
   
